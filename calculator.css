@@ -12,17 +12,30 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border: 5px solid #B762C1;
-    color: EEE;
+    color: #EEE;
 }
 
 .screen .output {
-    height: 85%;
+    height: 75%;
+    font-size: 35px;
+    padding-top: 7%;
     /* background-color: #8946A6; */
 }
 
 .screen .input {
     height: 15%;
+    font-size: 15px;
+    border: 1px solid #B762C1;
+    color: #FFCDDD;
     /* background-color: #B762C1; */
+}
+
+.screen .output,
+.screen .input {
+    display: flex;
+    flex-direction: row-reverse;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .keypad {
