@@ -42,11 +42,16 @@ function del() {
 }
 
 function clear() {
-    // clear the expression array
+    // clear the expression arrays
     expression.splice(0, expression.length);
+    numberArgs.splice(0, numberArgs.length);
     // clear both screens
     inputScreen.textContent = "";
     outputScreen.textContent = "";
+}
+
+function updateInputScreen() {
+    inputScreen.textContent = expression.join("");
 }
 
 (function main() {
@@ -56,18 +61,23 @@ function clear() {
     const numberButtons = document.querySelectorAll(".btn[data-number]");
     numberButtons.forEach(btn => btn.addEventListener("click", () => {
         expression.push(btn.getAttribute("data-number"));
-        inputScreen.textContent = expression.join("");
+        updateInputScreen();
     }));
 
     // operator buttons (Directly compute numbers:  +, -, *, /, !, x^2 etc)
     const operatorButtons = document.querySelectorAll(".btn[data-operator]");
     operatorButtons.forEach(btn => btn.addEventListener("click", () => {
         expression.push(btn.getAttribute("data-expr"));
-        inputScreen.textContent = expression.join("");
+        updateInputScreen();
     }));
 
 
     // special buttons ("Expression Modifiers" -- brackets, point, etc)
+    const specialButtons = document.querySelectorAll(".btn[data-special]");
+    specialButtons.forEach(btn => btn.addEventListener("click", () => {
+        expression.push(btn.getAttribute("data-expr"));
+        updateInputScreen();
+    }));
 
 
     // function buttons (these don't add to the expression, but do something)
