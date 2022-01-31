@@ -42,13 +42,14 @@ function evaluate(expr) {
     }
 
     // regex to find basic computations of form: 27+39*53
-    // (does not yet take expressions beginning with -/+ sign into consideration)
-    let basicOprRegex = /(\d+)([\+\-\*\/])(\d+)/;
+    let basicOprRegex = /([\+\-]?\d+)([\+\-\*\/])(\d+)/;
     basicOprMatch = expr.match(basicOprRegex);
     if (basicOprMatch) {
         console.log(basicOprMatch);
-        oprFunc = basicOprMap[basicOprMatch[2]];
-        let computedMatch = oprFunc(Number(basicOprMatch[1]), Number(basicOprMatch[3]));
+        let leftOperand = Number(basicOprMatch[1]);
+        let rightOperand = Number(basicOprMatch[3]);
+        let oprFunc = basicOprMap[basicOprMatch[2]];
+        let computedMatch = oprFunc(leftOperand, rightOperand);
         if (basicOprMatch[0].length == expr.length)
             return computedMatch;
         else {
