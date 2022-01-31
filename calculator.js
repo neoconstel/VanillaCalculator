@@ -32,7 +32,32 @@ const inputScreen = document.querySelector(".input");
 const outputScreen = document.querySelector(".output");
 
 const expression = [];
-const numberArgs = [];
+
+function evaluate(expr) {
+    const basicOprMap = {
+        "+": sum,
+        "-": subtract,
+        "*": product,
+        "/": divide
+    }
+
+    // regex to find basic computations of form: 27+39*53
+    // (does not yet take expressions beginning with -/+ sign into consideration)
+    let basicOprRegex = /(\d+)([\+\-\*\/])(\d+)/;
+    basicOprMatch = expr.match(basicOprRegex);
+    if (basicOprMatch) {
+        console.log(basicOprMatch);
+        oprFunc = basicOprMap[basicOprMatch[2]];
+        let computedMatch = oprFunc(Number(basicOprMatch[1]), Number(basicOprMatch[3]));
+        if (basicOprMatch[0].length == expr.length)
+            return computedMatch;
+        else {
+            expr = `${computedMatch}${expr.slice(basicOprMatch[0].length)}`;
+            return evaluate(expr);
+        }
+
+    }
+}
 
 function del() {
     // remove the last entered element from the expression array
@@ -42,9 +67,8 @@ function del() {
 }
 
 function clear() {
-    // clear the expression arrays
+    // clear the expression array
     expression.splice(0, expression.length);
-    numberArgs.splice(0, numberArgs.length);
     // clear both screens
     inputScreen.textContent = "";
     outputScreen.textContent = "";
