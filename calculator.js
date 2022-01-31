@@ -16,6 +16,25 @@ function divide(a, b) {
     return a / b;
 }
 
+function percent(n) {
+    return n / 100.0;
+}
+
+function square(n) {
+    return n ** 2;
+}
+
+function squareRoot(n) {
+    return Math.pow(n, 0.5);
+}
+
+function factoral(n) {
+    if (n == 1)
+        return n;
+    else
+        return n * factoral(n - 1);
+}
+
 /**
  * takes a mathematical function and the argument(s) to be computed
  * example use-case: operate(sum, 1,2,3); -> returns 6
