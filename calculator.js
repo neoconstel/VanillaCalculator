@@ -41,8 +41,8 @@ function evaluate(expr) {
         "/": divide
     }
 
-    // regex to find basic computations of form: 27+39*53
-    let basicOprRegex = /([\+\-]?\d+)([\+\-\*\/])(\d+)/;
+    // regex to find basic computations of form: 27.21+39.45*53.78
+    let basicOprRegex = /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/;
     basicOprMatch = expr.match(basicOprRegex);
     if (basicOprMatch) {
         console.log(basicOprMatch);
