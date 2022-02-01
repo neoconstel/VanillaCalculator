@@ -82,24 +82,21 @@ function evaluate(expr) {
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
+
+                // fallthrough (OR-like)
+                case "basic":
+                case "modulo":
+                case "power":
+                    operand1 = Number(oprMatch[1]);
+                    operand2 = Number(oprMatch[3]);
+                    oprFunc = OprToFunc[oprMatch[2]];
+                    computedMatch = oprFunc(operand1, operand2);
+                    break;
+
                 case "factoral":
                     operand1 = Number(oprMatch[1]);
                     oprFunc = OprToFunc[oprMatch[2]];
                     computedMatch = oprFunc(operand1);
-                    break;
-
-                case "basic":
-                    operand1 = Number(oprMatch[1]);
-                    operand2 = Number(oprMatch[3]);
-                    oprFunc = OprToFunc[oprMatch[2]];
-                    computedMatch = oprFunc(operand1, operand2);
-                    break;
-
-                case "modulo":
-                    operand1 = Number(oprMatch[1]);
-                    operand2 = Number(oprMatch[3]);
-                    oprFunc = OprToFunc[oprMatch[2]];
-                    computedMatch = oprFunc(operand1, operand2);
                     break;
 
                 case "brackets":
@@ -111,13 +108,6 @@ function evaluate(expr) {
                     operand1 = Number(oprMatch[2]);
                     oprFunc = OprToFunc[oprMatch[1]];
                     computedMatch = oprFunc(operand1);
-                    break;
-
-                case "power":
-                    operand1 = Number(oprMatch[1]);
-                    operand2 = Number(oprMatch[3]);
-                    oprFunc = OprToFunc[oprMatch[2]];
-                    computedMatch = oprFunc(operand1, operand2);
                     break;
             }
 
