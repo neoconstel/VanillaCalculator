@@ -20,8 +20,8 @@ function modulo(a, b) {
     return a % b;
 }
 
-function square(n) {
-    return n ** 2;
+function power(a, b) {
+    return a ** b;
 }
 
 function squareRoot(n) {
@@ -59,7 +59,7 @@ function evaluate(expr) {
         "*": product,
         "/": divide,
         "%": modulo,
-        "^2": square,
+        "^": power,
         "√": squareRoot,
         "!": factoral
     }
@@ -68,6 +68,7 @@ function evaluate(expr) {
     const oprRegexes = {
         "brackets": /\([^\()]+\)/,
         "factoral": /(\d+\.?\d*)(\!)/,
+        "power": /([\+\-]?\d+\.?\d*)(\^)(\d+\.?\d*)/,
         "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
         "squareRoot": /(√)(\d+\.?\d*)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
@@ -110,6 +111,13 @@ function evaluate(expr) {
                     operand1 = Number(oprMatch[2]);
                     oprFunc = OprToFunc[oprMatch[1]];
                     computedMatch = oprFunc(operand1);
+                    break;
+
+                case "power":
+                    operand1 = Number(oprMatch[1]);
+                    operand2 = Number(oprMatch[3]);
+                    oprFunc = OprToFunc[oprMatch[2]];
+                    computedMatch = oprFunc(operand1, operand2);
                     break;
             }
 
