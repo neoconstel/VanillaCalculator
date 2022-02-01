@@ -75,16 +75,23 @@ function evaluate(expr) {
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
             console.log(oprMatch);
-            let operand1 = Number(oprMatch[1]);
-            let operand2;
-            if (regexKey == "basic")
-                operand2 = Number(oprMatch[3]);
-            let oprFunc = OprToFunc[oprMatch[2]];
-            let computedMatch;
-            if (regexKey == "factoral")
-                computedMatch = oprFunc(operand1);
-            else if (regexKey == "basic")
-                computedMatch = oprFunc(operand1, operand2);
+
+            let operand1, operand2, oprFunc, computedMatch;
+            switch (regexKey) {
+                case "factoral":
+                    operand1 = Number(oprMatch[1]);
+                    oprFunc = OprToFunc[oprMatch[2]];
+                    computedMatch = oprFunc(operand1);
+                    break;
+
+                case "basic":
+                    operand1 = Number(oprMatch[1]);
+                    operand2 = Number(oprMatch[3]);
+                    oprFunc = OprToFunc[oprMatch[2]];
+                    computedMatch = oprFunc(operand1, operand2);
+                    break;
+            }
+
             if (oprMatch[0].length == expr.length)
                 return computedMatch;
             else {
