@@ -53,29 +53,51 @@ const outputScreen = document.querySelector(".output");
 const expression = [];
 
 function evaluate(expr) {
-    const basicOprMap = {
+    const OprMap = {
         "+": sum,
         "-": subtract,
         "*": product,
-        "/": divide
+        "/": divide,
+        "%": percent,
+        "": square,
+        "": squareRoot,
+        "!": factoral
     }
 
-    // regex to find basic computations of form: 27.21+39.45*53.78
-    let basicOprRegex = /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/;
-    basicOprMatch = expr.match(basicOprRegex);
-    if (basicOprMatch) {
-        console.log(basicOprMatch);
-        let leftOperand = Number(basicOprMatch[1]);
-        let rightOperand = Number(basicOprMatch[3]);
-        let oprFunc = basicOprMap[basicOprMatch[2]];
-        let computedMatch = oprFunc(leftOperand, rightOperand);
-        if (basicOprMatch[0].length == expr.length)
+    // regex for factoral
+    let oprRegex = /(\d+\.?\d*)(\!)/;
+    let oprMatch = expr.match(oprRegex);
+    if (oprMatch) {
+        console.log(oprMatch);
+        let operand = Number(oprMatch[1]);
+        let oprFunc = OprMap[oprMatch[2]];
+        let computedMatch = oprFunc(operand);
+        if (oprMatch[0].length == expr.length)
             return computedMatch;
         else {
-            expr = `${computedMatch}${expr.slice(basicOprMatch[0].length)}`;
+            expr = expr.replace(oprRegex, `${computedMatch}`);
             return evaluate(expr);
         }
+    }
 
+
+    // regex to find basic computations of form: 27.21+39.45*53.78
+    // solves recursively until the expression is as simple as two
+    // operands and one operator => 45+36   then returns the last solution
+    oprRegex = /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/;
+    oprMatch = expr.match(oprRegex);
+    if (oprMatch) {
+        console.log(oprMatch);
+        let leftOperand = Number(oprMatch[1]);
+        let rightOperand = Number(oprMatch[3]);
+        let oprFunc = OprMap[oprMatch[2]];
+        let computedMatch = oprFunc(leftOperand, rightOperand);
+        if (oprMatch[0].length == expr.length)
+            return computedMatch;
+        else {
+            expr = expr.replace(oprRegex, `${computedMatch}`);
+            return evaluate(expr);
+        }
     }
 }
 
