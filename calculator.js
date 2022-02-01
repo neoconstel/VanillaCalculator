@@ -147,7 +147,29 @@ function updateInputScreen() {
     inputScreen.textContent = expressionArray.join("");
 }
 
+function displayResult() {
+    let expression = expressionArray.join("");
+    let result = evaluate(expression);
+    // if result is a float, round off decimal places
+    // result = result % 1 === 0 ? result : result.toFixed(5);
+    if (result % 1 !== 0 && result.toString().length > 5)
+        result = result.toFixed(5);
+    // clear just the input screen (0)
+    clear(0);
+    outputScreen.textContent = `${result}`;
+}
+
 (function main() {
+
+    window.addEventListener("keydown", (event) => {
+        if (event.key.match(/[0-9\.\+\-\*\/\^\%\!\(\)]/)) {
+            expressionArray.push(event.key);
+            updateInputScreen();
+        } else if (event.key == "Backspace")
+            del();
+        else if (event.key == "Enter")
+            displayResult();
+    });
 
     // UI BUTTONS
     // number, operator, special buttons (call them expression buttons)
@@ -165,15 +187,5 @@ function updateInputScreen() {
     clearButton.addEventListener("click", clear);
 
     const evaluateButton = document.querySelector(".btn[data-function=evaluate]");
-    evaluateButton.addEventListener("click", () => {
-        let expression = expressionArray.join("");
-        let result = evaluate(expression);
-        // if result is a float, round off decimal places
-        // result = result % 1 === 0 ? result : result.toFixed(5);
-        if (result % 1 !== 0 && result.toString().length > 5)
-            result = result.toFixed(5);
-        // clear just the input screen (0)
-        clear(0);
-        outputScreen.textContent = `${result}`;
-    });
+    evaluateButton.addEventListener("click", displayResult);
 })();
