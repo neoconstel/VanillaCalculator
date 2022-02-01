@@ -69,6 +69,7 @@ function evaluate(expr) {
         "brackets": /\([^\()]+\)/,
         "factoral": /(\d+\.?\d*)(\!)/,
         "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
+        "squareRoot": /(√)(\d+\.?\d*)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
     };
 
@@ -103,6 +104,12 @@ function evaluate(expr) {
                 case "brackets":
                     let innerExpression = oprMatch[0].slice(1, oprMatch[0].length - 1);
                     computedMatch = evaluate(innerExpression);
+                    break;
+
+                case "squareRoot":
+                    operand1 = Number(oprMatch[2]);
+                    oprFunc = OprToFunc[oprMatch[1]];
+                    computedMatch = oprFunc(operand1);
                     break;
             }
 
@@ -179,6 +186,8 @@ function updateInputScreen() {
     evaluateButton.addEventListener("click", () => {
         let expression = expressionArray.join("");
         let result = evaluate(expression);
+        // if result is a float, round off decimal places
+        // result = result % 1 === 0 ? result : result.toFixed(5);
         // clear just the input screen (0)
         clear(0);
         outputScreen.textContent = `${result}`;
