@@ -66,6 +66,7 @@ function evaluate(expr) {
 
     // the order here determines operator precedence
     const oprRegexes = {
+        "brackets": /\([^\()]+\)/,
         "factoral": /(\d+\.?\d*)(\!)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
     };
@@ -89,6 +90,11 @@ function evaluate(expr) {
                     operand2 = Number(oprMatch[3]);
                     oprFunc = OprToFunc[oprMatch[2]];
                     computedMatch = oprFunc(operand1, operand2);
+                    break;
+
+                case "brackets":
+                    let innerExpression = oprMatch[0].slice(1, oprMatch[0].length - 1);
+                    computedMatch = evaluate(innerExpression);
                     break;
             }
 
