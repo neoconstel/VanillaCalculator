@@ -151,14 +151,14 @@ function updateInputScreen() {
 
     // UI BUTTONS
     // number buttons (The numbers themselves: 0-9)
-    const numberButtons = document.querySelectorAll(".btn[data-number]");
+    const numberButtons = document.querySelectorAll(".btn.number");
     numberButtons.forEach(btn => btn.addEventListener("click", () => {
-        expressionArray.push(btn.getAttribute("data-number"));
+        expressionArray.push(btn.getAttribute("data-expr"));
         updateInputScreen();
     }));
 
     // operator buttons (Directly compute numbers:  +, -, *, /, !, x^2 etc)
-    const operatorButtons = document.querySelectorAll(".btn[data-operator]");
+    const operatorButtons = document.querySelectorAll(".btn.operator");
     operatorButtons.forEach(btn => btn.addEventListener("click", () => {
         expressionArray.push(btn.getAttribute("data-expr"));
         updateInputScreen();
@@ -166,7 +166,7 @@ function updateInputScreen() {
 
 
     // special buttons ("Expression Modifiers" -- brackets, point, etc)
-    const specialButtons = document.querySelectorAll(".btn[data-special]");
+    const specialButtons = document.querySelectorAll(".btn.special");
     specialButtons.forEach(btn => btn.addEventListener("click", () => {
         expressionArray.push(btn.getAttribute("data-expr"));
         updateInputScreen();
