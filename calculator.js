@@ -78,7 +78,7 @@ function evaluate(expr) {
         let oprRegex = oprRegexes[regexKey];
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
-            console.log(oprMatch);
+            // console.log(oprMatch);
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
@@ -186,6 +186,8 @@ function updateInputScreen() {
         let result = evaluate(expression);
         // if result is a float, round off decimal places
         // result = result % 1 === 0 ? result : result.toFixed(5);
+        if (result % 1 !== 0 && result.toString().length > 5)
+            result = result.toFixed(5);
         // clear just the input screen (0)
         clear(0);
         outputScreen.textContent = `${result}`;
