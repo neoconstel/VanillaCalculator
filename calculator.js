@@ -53,50 +53,44 @@ const outputScreen = document.querySelector(".output");
 const expressionArray = [];
 
 function evaluate(expr) {
-    const OprMap = {
+    const OprToFunc = {
         "+": sum,
         "-": subtract,
         "*": product,
         "/": divide,
         "%": percent,
-        "": square,
-        "": squareRoot,
+        "^2": square,
+        "√": squareRoot,
         "!": factoral
     }
 
-    // regex for factoral
-    let oprRegex = /(\d+\.?\d*)(\!)/;
-    let oprMatch = expr.match(oprRegex);
-    if (oprMatch) {
-        console.log(oprMatch);
-        let operand = Number(oprMatch[1]);
-        let oprFunc = OprMap[oprMatch[2]];
-        let computedMatch = oprFunc(operand);
-        if (oprMatch[0].length == expr.length)
-            return computedMatch;
-        else {
-            expr = expr.replace(oprRegex, `${computedMatch}`);
-            return evaluate(expr);
-        }
-    }
+    // the order here determines operator precedence
+    const oprRegexes = {
+        "factoral": /(\d+\.?\d*)(\!)/,
+        "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
+    };
 
-
-    // regex to find basic computations of form: 27.21+39.45*53.78
-    // solves recursively until the expression is as simple as two
-    // operands and one operator => 45+36   then returns the last solution
-    oprRegex = /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/;
-    oprMatch = expr.match(oprRegex);
-    if (oprMatch) {
-        console.log(oprMatch);
-        let leftOperand = Number(oprMatch[1]);
-        let rightOperand = Number(oprMatch[3]);
-        let oprFunc = OprMap[oprMatch[2]];
-        let computedMatch = oprFunc(leftOperand, rightOperand);
-        if (oprMatch[0].length == expr.length)
-            return computedMatch;
-        else {
-            expr = expr.replace(oprRegex, `${computedMatch}`);
-            return evaluate(expr);
+    for (let regexKey in oprRegexes) {
+        let oprRegex = oprRegexes[regexKey];
+        let oprMatch = expr.match(oprRegex);
+        if (oprMatch) {
+            console.log(oprMatch);
+            let operand1 = Number(oprMatch[1]);
+            let operand2;
+            if (regexKey == "basic")
+                operand2 = Number(oprMatch[3]);
+            let oprFunc = OprToFunc[oprMatch[2]];
+            let computedMatch;
+            if (regexKey == "factoral")
+                computedMatch = oprFunc(operand1);
+            else if (regexKey == "basic")
+                computedMatch = oprFunc(operand1, operand2);
+            if (oprMatch[0].length == expr.length)
+                return computedMatch;
+            else {
+                expr = expr.replace(oprRegex, `${computedMatch}`);
+                return evaluate(expr);
+            }
         }
     }
 }
@@ -164,6 +158,7 @@ function updateInputScreen() {
     evaluateButton.addEventListener("click", () => {
         let expression = expressionArray.join("");
         let result = evaluate(expression);
+        // clear just the input screen (0)
         clear(0);
         outputScreen.textContent = `${result}`;
     });
