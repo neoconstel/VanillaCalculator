@@ -16,8 +16,8 @@ function divide(a, b) {
     return a / b;
 }
 
-function percent(n) {
-    return n / 100.0;
+function modulo(a, b) {
+    return a % b;
 }
 
 function square(n) {
@@ -58,7 +58,7 @@ function evaluate(expr) {
         "-": subtract,
         "*": product,
         "/": divide,
-        "%": percent,
+        "%": modulo,
         "^2": square,
         "√": squareRoot,
         "!": factoral
@@ -68,6 +68,7 @@ function evaluate(expr) {
     const oprRegexes = {
         "brackets": /\([^\()]+\)/,
         "factoral": /(\d+\.?\d*)(\!)/,
+        "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
     };
 
@@ -86,6 +87,13 @@ function evaluate(expr) {
                     break;
 
                 case "basic":
+                    operand1 = Number(oprMatch[1]);
+                    operand2 = Number(oprMatch[3]);
+                    oprFunc = OprToFunc[oprMatch[2]];
+                    computedMatch = oprFunc(operand1, operand2);
+                    break;
+
+                case "modulo":
                     operand1 = Number(oprMatch[1]);
                     operand2 = Number(oprMatch[3]);
                     oprFunc = OprToFunc[oprMatch[2]];
