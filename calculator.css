@@ -36,6 +36,7 @@
     flex-direction: row-reverse;
     white-space: nowrap;
     overflow: hidden;
+    background-color: #310049;
 }
 
 .keypad {
@@ -63,6 +64,10 @@
 
 .btn:hover {
     border: 2px solid #FFCDDD;
+}
+
+.btn.number {
+    background-color: #a854cc;
 }
 
 .btn:active {
