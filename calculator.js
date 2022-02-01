@@ -50,7 +50,7 @@ function operate(callback) {
 const inputScreen = document.querySelector(".input");
 const outputScreen = document.querySelector(".output");
 
-const expression = [];
+const expressionArray = [];
 
 function evaluate(expr) {
     const OprMap = {
@@ -103,21 +103,28 @@ function evaluate(expr) {
 
 function del() {
     // remove the last entered element from the expression array
-    expression.pop();
+    expressionArray.pop();
     // update the input screen to the contents of the expression array
-    inputScreen.textContent = expression.join("");
+    inputScreen.textContent = expressionArray.join("");
 }
 
-function clear() {
+function clear(screen = null) {
     // clear the expression array
-    expression.splice(0, expression.length);
+    expressionArray.splice(0, expressionArray.length);
+    if (screen == 0) {
+        inputScreen.textContent = "";
+        return;
+    } else if (screen == 1) {
+        outputScreen.textContent = "";
+        return;
+    }
     // clear both screens
     inputScreen.textContent = "";
     outputScreen.textContent = "";
 }
 
 function updateInputScreen() {
-    inputScreen.textContent = expression.join("");
+    inputScreen.textContent = expressionArray.join("");
 }
 
 (function main() {
@@ -126,14 +133,14 @@ function updateInputScreen() {
     // number buttons (The numbers themselves: 0-9)
     const numberButtons = document.querySelectorAll(".btn[data-number]");
     numberButtons.forEach(btn => btn.addEventListener("click", () => {
-        expression.push(btn.getAttribute("data-number"));
+        expressionArray.push(btn.getAttribute("data-number"));
         updateInputScreen();
     }));
 
     // operator buttons (Directly compute numbers:  +, -, *, /, !, x^2 etc)
     const operatorButtons = document.querySelectorAll(".btn[data-operator]");
     operatorButtons.forEach(btn => btn.addEventListener("click", () => {
-        expression.push(btn.getAttribute("data-expr"));
+        expressionArray.push(btn.getAttribute("data-expr"));
         updateInputScreen();
     }));
 
@@ -141,7 +148,7 @@ function updateInputScreen() {
     // special buttons ("Expression Modifiers" -- brackets, point, etc)
     const specialButtons = document.querySelectorAll(".btn[data-special]");
     specialButtons.forEach(btn => btn.addEventListener("click", () => {
-        expression.push(btn.getAttribute("data-expr"));
+        expressionArray.push(btn.getAttribute("data-expr"));
         updateInputScreen();
     }));
 
@@ -152,4 +159,12 @@ function updateInputScreen() {
 
     const clearButton = document.querySelector(".btn[data-function=clear]");
     clearButton.addEventListener("click", clear);
+
+    const evaluateButton = document.querySelector(".btn[data-function=evaluate]");
+    evaluateButton.addEventListener("click", () => {
+        let expression = expressionArray.join("");
+        let result = evaluate(expression);
+        clear(0);
+        outputScreen.textContent = `${result}`;
+    });
 })();
