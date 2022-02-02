@@ -83,7 +83,7 @@ function evaluate(expr) {
         let oprRegex = oprRegexes[regexKey];
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
-            console.log(oprMatch);
+            // console.log(oprMatch);
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
@@ -124,7 +124,7 @@ function evaluate(expr) {
              *keep sign (+) in front
              */
             let sign = "";
-            if (regexKey != "basic" && regexKey != "constant" && oprMatch.index > 0) {
+            if (oprMatch.index > 0) {
                 sign = oprMatch[0][0].match(/[\+\-\*\?]/) ? oprMatch[0][0] : sign;
             }
 
