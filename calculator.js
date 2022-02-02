@@ -31,6 +31,7 @@ function squareRoot(n) {
 }
 
 function factoral(n) {
+
     // abort if negative or float
     if (n < 0 || n % 1 !== 0)
         return "n must be integer > = 0 !";
@@ -70,7 +71,19 @@ function evaluate(expr) {
         "!": factoral
     }
 
-    // the order here determines operator precedence
+    /**
+     * These are regex expressions to find number patterns which are solvable.
+     * Each of them solve directly into a returnable numeric result. If in a 
+     * complex expression (consisting of two or more solvable sequences) 
+     * e.g 3+3!-2*2^2, then
+     * the solution is broken down -- by replacing the expression with each 
+     * solved sequence and repeating the process until the expression becomes
+     * most simple: in the "basic" form of a+b-c*d. example: 3+6-2*4.
+     * The most simple solvable form are constants. example: 5.
+     * 
+     * The order of the regexes as defined here determines operator precedence,
+     * which means brackets are evaluated first and foremost down to constants.
+     */
     const oprRegexes = {
         "brackets": /\([^\()]+\)/,
         "factoral": /([\+\-]?\d+\.?\d*)(\!)/,
@@ -81,11 +94,24 @@ function evaluate(expr) {
         "constant": /([\+\-]?\d+\.?\d*)/,
     };
 
+    /**
+     * abort if the expression matches any of these patterns
+     */
+    const forbiddenRegexes = {
+        "sequentialPoints": /\.{2,}/,
+        "skippingPoints": /\.+[0-9]\.+/,
+    };
+    for (badRegex of Object.values(forbiddenRegexes)) {
+        if (expr.match(badRegex))
+            return "Points Abuse is Crime!";
+    }
+    // ---------------End of abort section---------------
+
     for (let regexKey in oprRegexes) {
         let oprRegex = oprRegexes[regexKey];
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
-            console.log(oprMatch);
+            // console.log(oprMatch);
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
@@ -123,22 +149,31 @@ function evaluate(expr) {
             }
 
 
-            /* numberComesBefore condition makes it possible to do sqrt(-5^2) = 5
-             * the logic though needs to be improved
+            /* numberComesJustBefore condition makes it possible to do 
+             * sqrt(-5^2) = 5
+             * the logic though probably needs to be improved
              */
-            let numberComesBefore = Number(expr[oprMatch.index - 1]);
+            let numberComesJustBefore = Number(expr[oprMatch.index - 1]);
             /* if match is not the first in the expression (e.g x^2 in 25+x^2),
              *keep sign (+) in front
              */
             let sign = "";
-            if (oprMatch.index > 0 && numberComesBefore) {
+            if (oprMatch.index > 0 && numberComesJustBefore) {
                 sign = oprMatch[0][0].match(/[\+\-\*\?]/) ? oprMatch[0][0] : sign;
             }
 
-            if (oprMatch[0].length == expr.length)
+            // if the evaluatable match is the entire expression, the result
+            // of it is the final result so return it as the answer
+            if (oprMatch[0] == expr)
                 return computedMatch;
             else {
+                let oldExpr = expr;
                 expr = expr.replace(oprRegex, `${sign}${computedMatch}`);
+
+                // ensure the expression is solvable (non-repeting) else abort
+                if (expr == oldExpr)
+                    return "Syntax Error!";
+
                 return evaluate(expr);
             }
         }
