@@ -185,6 +185,7 @@ function displayResult() {
 
 (function main() {
 
+    // keyboard integration
     window.addEventListener("keydown", (event) => {
         if (event.key.match(/[0-9\.\+\-\*\/\^\%\!\(\)]/)) {
             expressionArray.push(event.key);
@@ -212,4 +213,10 @@ function displayResult() {
 
     const evaluateButton = document.querySelector(".btn[data-function=evaluate]");
     evaluateButton.addEventListener("click", displayResult);
+
+
+    // copyright update
+    const currentYear = new Date().getFullYear();
+    const copyYear = document.querySelector(".copyright span");
+    copyYear.textContent = currentYear;
 })();

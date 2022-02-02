@@ -1,3 +1,7 @@
+body {
+    background-color: #FFCDDD;
+}
+
 .body {
     width: 270px;
     background-color: #8946A6;
@@ -79,4 +83,13 @@
 .btn sup {
     position: relative;
     bottom: 10px;
+}
+
+.copyright {
+    text-align: center;
+    color: #8946A6;
+}
+
+a:hover {
+    color: magenta;
 }
