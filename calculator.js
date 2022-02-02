@@ -25,13 +25,15 @@ function power(a, b) {
 }
 
 function squareRoot(n) {
+    if (n <= 0)
+        return "Oops! n MUST be > 0 !";
     return Math.pow(n, 0.5);
 }
 
 function factoral(n) {
     // abort if negative or float
     if (n < 0 || n % 1 !== 0)
-        return;
+        return "n must be integer > = 0 !";
 
     if (n == 1 || n == 0)
         return 1;
@@ -74,7 +76,7 @@ function evaluate(expr) {
         "factoral": /([\+\-]?\d+\.?\d*)(\!)/,
         "power": /([\+\-]?\d+\.?\d*)(\^)(\d+\.?\d*)/,
         "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
-        "squareRoot": /(√)(\d+\.?\d*)/,
+        "squareRoot": /(√)([\+\-]?\d+\.?\d*)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])([\+\-]?\d+\.?\d*)/,
         "constant": /([\+\-]?\d+\.?\d*)/,
     };
@@ -169,7 +171,7 @@ function displayResult() {
     let result = evaluate(expression);
     // if result is a float, round off decimal places
     // result = result % 1 === 0 ? result : result.toFixed(5);
-    if (result % 1 !== 0 && result.toString().length > 5)
+    if (Number(result) && result % 1 !== 0 && result.toString().length > 5)
         result = result.toFixed(5);
     // clear just the input screen (0)
     clear(0);
