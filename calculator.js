@@ -29,6 +29,10 @@ function squareRoot(n) {
 }
 
 function factoral(n) {
+    // abort if negative or float
+    if (n < 0 || n % 1 !== 0)
+        return;
+
     if (n == 1 || n == 0)
         return 1;
     else
@@ -67,11 +71,11 @@ function evaluate(expr) {
     // the order here determines operator precedence
     const oprRegexes = {
         "brackets": /\([^\()]+\)/,
-        "factoral": /(\d+\.?\d*)(\!)/,
+        "factoral": /([\+\-]?\d+\.?\d*)(\!)/,
         "power": /([\+\-]?\d+\.?\d*)(\^)(\d+\.?\d*)/,
         "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
         "squareRoot": /(√)(\d+\.?\d*)/,
-        "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
+        "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])([\+\-]?\d+\.?\d*)/,
         "constant": /([\+\-]?\d+\.?\d*)/,
     };
 
@@ -79,7 +83,7 @@ function evaluate(expr) {
         let oprRegex = oprRegexes[regexKey];
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
-            // console.log(oprMatch);
+            console.log(oprMatch);
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
@@ -116,10 +120,18 @@ function evaluate(expr) {
                     break;
             }
 
+            /* if match is not the first in the expression (e.g x^2 in 25+x^2),
+             *keep sign (+) in front
+             */
+            let sign = "";
+            if (regexKey != "basic" && regexKey != "constant" && oprMatch.index > 0) {
+                sign = oprMatch[0][0].match(/[\+\-\*\?]/) ? oprMatch[0][0] : sign;
+            }
+
             if (oprMatch[0].length == expr.length)
                 return computedMatch;
             else {
-                expr = expr.replace(oprRegex, `${computedMatch}`);
+                expr = expr.replace(oprRegex, `${sign}${computedMatch}`);
                 return evaluate(expr);
             }
         }
