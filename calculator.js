@@ -72,6 +72,7 @@ function evaluate(expr) {
         "modulo": /([\+\-]?\d+\.?\d*)(\%)(\d+\.?\d*)/,
         "squareRoot": /(√)(\d+\.?\d*)/,
         "basic": /([\+\-]?\d+\.?\d*)([\+\-\*\/])(\d+\.?\d*)/,
+        "constant": /([\+\-]?\d+\.?\d*)/,
     };
 
     for (let regexKey in oprRegexes) {
@@ -108,6 +109,10 @@ function evaluate(expr) {
                     operand1 = Number(oprMatch[2]);
                     oprFunc = OprToFunc[oprMatch[1]];
                     computedMatch = oprFunc(operand1);
+                    break;
+
+                case "constant":
+                    computedMatch = Number(oprMatch[1]) * 1;
                     break;
             }
 
