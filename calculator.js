@@ -85,7 +85,7 @@ function evaluate(expr) {
         let oprRegex = oprRegexes[regexKey];
         let oprMatch = expr.match(oprRegex);
         if (oprMatch) {
-            // console.log(oprMatch);
+            console.log(oprMatch);
 
             let operand1, operand2, oprFunc, computedMatch;
             switch (regexKey) {
@@ -122,11 +122,16 @@ function evaluate(expr) {
                     break;
             }
 
+
+            /* numberComesBefore condition makes it possible to do sqrt(-5^2) = 5
+             * the logic though needs to be improved
+             */
+            let numberComesBefore = Number(expr[oprMatch.index - 1]);
             /* if match is not the first in the expression (e.g x^2 in 25+x^2),
              *keep sign (+) in front
              */
             let sign = "";
-            if (oprMatch.index > 0) {
+            if (oprMatch.index > 0 && numberComesBefore) {
                 sign = oprMatch[0][0].match(/[\+\-\*\?]/) ? oprMatch[0][0] : sign;
             }
 
